@@ -1,7 +1,3 @@
-// TODO: Use regex to find numbers, get their positions and then
-// search neighbouring substrings for things that aren’t numbers or decimal points,
-// if there’s a hit then save the number.
-
 #include <regex>
 #include <string>
 #include <iostream>
