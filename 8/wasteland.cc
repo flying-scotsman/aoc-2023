@@ -1,7 +1,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <string>
-#include <nuemric>
+#include <numeric>
 #include "helpers.hpp"
 
 std::unordered_map<std::string, unsigned int> instructionMap{
@@ -82,72 +82,33 @@ void solvePartTwo(std::vector<unsigned int> const & instructions, std::unordered
     }
     std::cout << std::endl;
 
-    auto checkKeys = [&]() -> bool
-    {
-        // unsigned int count = 0;
-        // bool allZ = true;
-        for (auto const & key : keys)
-        {
-            if ('Z' != key[2])
-            {
-                // allZ = false;
-                // continue;
-                return false;
-            }
-            // count++;
-        }
-        return true;
-        // if (3 < count)
-        //     std::cout << count << " keys with Z!" << std::endl;
-        // return allZ;
-    };
+    std::vector<unsigned int> stepsToZ;
 
-    unsigned int step{0};
-
-    // I could have a look at how long it takes for every key to get to Z by itself
     for (auto key : keys)
     {
         unsigned int step_test{0};
-        std::vector<unsigned int> z_steps;
 
         auto currentKey = key;
 
-        while (1000000 > step_test)
+        while ('Z' != currentKey[2])
         {
             step_test++;
 
             unsigned int instruction = instructions[(step_test-1) % instructions.size()];
             currentKey = instruction ? mappings.at(currentKey).second : mappings.at(currentKey).first;
-            // std::cout << "Current key: " << currentKey << std::endl;
-            if ('Z' == currentKey[2])
-            {
-                z_steps.push_back(step_test);
-            }
         }
-        std::cout << "Z steps for key " << key << ": ";
-        for (auto z_step : z_steps)
-        {
-            std::cout << z_step << " ";
-        }
-        std::cout << std::endl;
+        std::cout << "Distance to first z instance for key " << key << ": " << step_test << std::endl;
+        stepsToZ.push_back(step_test);
     }
 
+    std::size_t solution{1};
 
-    // while(!checkKeys())
-    // {
-    //     step++;
+    for (auto s : stepsToZ)
+    {
+        solution = std::lcm(solution, s);
+    }
 
-    //     unsigned int instruction = instructions[(step-1) % instructions.size()];
-
-    //     for (auto & key : keys)
-    //     {
-    //         // auto oldKey = key;
-    //         key = instruction ? mappings.at(key).second : mappings.at(key).first;
-    //         // std::cout << "Changed " << oldKey << " to " << key << std::endl;
-    //     }
-    // }
-
-    // std::cout << "Number of steps: " << step << std::endl;
+    std::cout << "Solution: " << solution << std::endl;
 }
 
 int main(int argc, const char ** argv)
