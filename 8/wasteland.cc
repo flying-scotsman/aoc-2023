@@ -113,9 +113,6 @@ void solvePartTwo(std::vector<unsigned int> const & instructions, std::unordered
 
 int main(int argc, const char ** argv)
 {
-    // TODO: Read in instructions (if match isn't found by the end of the instructions, repeat) (one line)
-    // Then read in all the other lines
-    // Format - map of pairs
     if (argc < 2)
     {
         std::cerr << "Please specify filename to read in!" << std::endl;
