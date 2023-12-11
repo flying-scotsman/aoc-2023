@@ -1,5 +1,6 @@
 #include <iostream>
 #include <regex>
+#include <unordered_set>
 #include "helpers.hpp"
 
 void duplicateLines(std::vector<std::string> & lines)
@@ -25,7 +26,7 @@ void duplicateLines(std::vector<std::string> & lines)
     }
 }
 
-void duplicateColumns(std::vector<std::string> & lines)
+std::vector<std::string> pivotLines(std::vector<std::string> const & lines)
 {
     std::vector<std::string> columns(lines[0].size());
 
@@ -36,25 +37,61 @@ void duplicateColumns(std::vector<std::string> & lines)
         {
             // I always want to append the ith element in a line to the ith column
             columns[i] += lines[j][i];
-
         }
     }
 
-    // Now duplicate, reverse the order again and overwrite lines
+    return columns;
+}
+
+std::unordered_set<unsigned int> getEmptyLines(std::vector<std::string> const & lines)
+{
+    std::unordered_set<unsigned int> output;
+
+    std::regex rgx{"\\#"};
+    std::smatch match{};
+
+    for (unsigned int i = 0; i < lines.size(); ++i)
+    {
+        if (std::regex_search(lines[i], match, rgx))
+            continue;
+
+        // No galaxy - remember this id
+        output.insert(i);
+    }
+
+    return output;
+}
+
+std::unordered_set<unsigned int> getEmptyColumns(std::vector<std::string> const & lines)
+{
+    std::vector<std::string> columns{pivotLines(lines)};
+
+    return getEmptyLines(columns);
+}
+
+void duplicateColumns(std::vector<std::string> & lines)
+{
+    std::vector<std::string> columns{pivotLines(lines)};
+
     duplicateLines(columns);
 
-    std::vector<std::string> rows(columns[0].size());
+    lines = pivotLines(columns);
+}
 
-    // I need to fill the ith element in the jth row with the jth element from the ith row
-    for (unsigned int i = 0; i < columns[0].size(); ++i)
+std::vector<helpers::Index> getGalaxies(std::vector<std::string> const & lines)
+{
+    std::vector<helpers::Index> galaxies;
+
+    for (int i = 0; i < lines.size(); ++i)
     {
-        for (unsigned int j = 0; j < columns.size(); ++j)
+        for (int j = 0; j < lines[i].size(); ++j)
         {
-            rows[i] += columns[j][i];
+            if ('#' == lines[i][j])
+                galaxies.push_back({i, j});
         }
     }
 
-    lines = rows;
+    return galaxies;
 }
 
 void solvePartOne(std::vector<std::string> & lines)
@@ -65,15 +102,7 @@ void solvePartOne(std::vector<std::string> & lines)
     duplicateColumns(lines);
 
     // Then simply get the coordinates of the galaxies, find the vector between them and add x+y
-    std::vector<helpers::Index> galaxies;
-    for (int i = 0; i < lines.size(); ++i)
-    {
-        for (int j = 0; j < lines[i].size(); ++j)
-        {
-            if ('#' == lines[i][j])
-                galaxies.push_back({i, j});
-        }
-    }
+    std::vector<helpers::Index> galaxies{getGalaxies(lines)};
 
     std::size_t distanceSum{0};
 
@@ -83,6 +112,46 @@ void solvePartOne(std::vector<std::string> & lines)
         {
             helpers::Index diffIdx = galaxies[j] - galaxies[i];
             distanceSum += std::abs(diffIdx.r) + std::abs(diffIdx.c);
+        }
+    }
+
+    std::cout << "Total distance sum: " << distanceSum << std::endl;
+}
+
+int galaxyExpander(int a, int b, std::vector<helpers::Index> const & galaxies,
+    std::unordered_set<unsigned int> const & emptyLines,
+    unsigned int const expansionFactor)
+{
+    unsigned int numOfEmptyLines{0};
+    for (int k = std::min(a, b);
+         k < std::max(a, b);
+         ++k)
+    {
+        if (emptyLines.contains(k))
+            numOfEmptyLines++;
+    }
+
+    int diff = std::abs(a - b) - numOfEmptyLines
+        + numOfEmptyLines * expansionFactor;
+
+    return diff;
+}
+
+void solvePartTwo(std::vector<std::string> const & lines)
+{
+    std::unordered_set<unsigned int> emptyRows = getEmptyLines(lines);
+    std::unordered_set<unsigned int> emptyColumns = getEmptyColumns(lines);
+
+    std::vector<helpers::Index> galaxies{getGalaxies(lines)};
+
+    std::size_t distanceSum{0};
+
+    for (int i = 0; i < galaxies.size(); ++i)
+    {
+        for (int j = i + 1; j < galaxies.size(); ++j)
+        {
+            distanceSum += galaxyExpander(galaxies[i].r, galaxies[j].r, galaxies, emptyRows, 1000000) +
+                galaxyExpander(galaxies[i].c, galaxies[j].c, galaxies, emptyColumns, 1000000);
         }
     }
 
@@ -99,5 +168,5 @@ int main(int argc, const char ** argv)
 
     auto lines{helpers::getLinesInFile(argv[1])};
 
-
+    solvePartTwo(lines);
 }
