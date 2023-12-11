@@ -5,6 +5,9 @@
 #include <fstream>
 #include <regex>
 
+namespace helpers
+{
+
 std::vector<std::string> getLinesInFile(std::string const & filename)
 {
     std::fstream file{};
@@ -51,4 +54,27 @@ std::vector<T> slice(std::vector<T> const &v, int m, int n)
  
     std::vector<T> vec(first, last);
     return vec;
+}
+
+struct Index
+{
+    int r = -1;
+    int c = -1;
+
+    Index operator+(Index const & other)
+    {
+        return {r + other.r, c + other.c};
+    }
+
+    bool operator==(Index const & other) const
+    {
+        return r == other.r && c == other.c;
+    }
+
+    Index operator-(Index const & other)
+    {
+        return {r - other.r, c - other.c};
+    }
+};
+
 }

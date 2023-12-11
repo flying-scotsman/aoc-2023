@@ -3,21 +3,7 @@
 #include <cstdint>
 #include "helpers.hpp"
 
-struct Index
-{
-    int r = -1;
-    int c = -1;
-
-    Index operator+(Index const & other)
-    {
-        return {r + other.r, c + other.c};
-    }
-
-    bool operator==(Index const & other) const
-    {
-        return r == other.r && c == other.c;
-    }
-};
+using namespace helpers;
 
 // Position
 //  0
@@ -243,7 +229,7 @@ int main(int argc, const char ** argv)
         return -1;
     }
 
-    auto lines{getLinesInFile(argv[1])};
+    auto lines{helpers::getLinesInFile(argv[1])};
 
     // solvePartOne(lines);
     solvePartTwo(lines);

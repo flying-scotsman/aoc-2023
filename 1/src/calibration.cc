@@ -74,7 +74,7 @@ int main(int argc, const char ** argv)
         return -1;
     }
 
-    std::vector<std::string> lines = getLinesInFile(argv[1]);
+    std::vector<std::string> lines = helpers::getLinesInFile(argv[1]);
 
     // while(std::getline(file, line))
     for (auto line : lines)

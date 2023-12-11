@@ -125,7 +125,7 @@ int main(int argc, const char ** argv)
         return -1;
     }
 
-    auto lines = getLinesInFile(argv[1]);
+    auto lines = helpers::getLinesInFile(argv[1]);
 
     unsigned int totalSum = 0;
 

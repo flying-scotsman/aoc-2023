@@ -119,7 +119,7 @@ int main(int argc, const char ** argv)
         return -1;
     }
 
-    auto lines = getLinesInFile(argv[1]);
+    auto lines = helpers::getLinesInFile(argv[1]);
 
     auto instructions = getInstructions(lines[0]);
 
@@ -127,7 +127,7 @@ int main(int argc, const char ** argv)
 
     // solvePartOne(instructionsPartOne, mappings);
 
-    auto mappings = getMappings(slice(lines, 2, lines.size()), "[A-Z0-9]+");
+    auto mappings = getMappings(helpers::slice(lines, 2, lines.size()), "[A-Z0-9]+");
 
     solvePartTwo(instructions, mappings);
 }
