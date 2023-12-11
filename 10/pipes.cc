@@ -217,21 +217,19 @@ void solvePartTwo(std::vector<std::string> const & lines)
 
     for (std::size_t i = 0; i < links.size(); ++i)
     {
-        // Special case for links.size() - 1
         if (links.size() - 1 == i)
         {
             A += links[i].r * links[0].c - links[i].c * links[0].r;
-            // std::cout << "Adding " << links[i].r * links[0].c - links[i].c * links[0].r << " to A" << std::endl;
         }
         else
         {
             A += links[i].r * links[i+1].c - links[i].c * links[i+1].r;
-            // std::cout << "Adding " << links[i].r * links[i+1].c - links[i].c * links[i+1].r << " to A" << std::endl;
         }
     }
 
     std::cout << "Area of polygon: " << std::abs(A/2) << std::endl;
 
+    // This is Pick's theorem
     std::int64_t i = std::abs(A/2) + 1 - b/2;
 
     std::cout << "Number of interior points: " << i << std::endl;
