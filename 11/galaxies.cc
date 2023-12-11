@@ -118,7 +118,7 @@ void solvePartOne(std::vector<std::string> & lines)
     std::cout << "Total distance sum: " << distanceSum << std::endl;
 }
 
-int galaxyExpander(int a, int b, std::vector<helpers::Index> const & galaxies,
+int universeExpander(int a, int b, std::vector<helpers::Index> const & galaxies,
     std::unordered_set<unsigned int> const & emptyLines,
     unsigned int const expansionFactor)
 {
@@ -150,8 +150,8 @@ void solvePartTwo(std::vector<std::string> const & lines)
     {
         for (int j = i + 1; j < galaxies.size(); ++j)
         {
-            distanceSum += galaxyExpander(galaxies[i].r, galaxies[j].r, galaxies, emptyRows, 1000000) +
-                galaxyExpander(galaxies[i].c, galaxies[j].c, galaxies, emptyColumns, 1000000);
+            distanceSum += universeExpander(galaxies[i].r, galaxies[j].r, galaxies, emptyRows, 1000000) +
+                universeExpander(galaxies[i].c, galaxies[j].c, galaxies, emptyColumns, 1000000);
         }
     }
 
