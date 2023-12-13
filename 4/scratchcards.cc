@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <unordered_set>
+#include <unordered_map>
 #include "helpers.hpp"
 
 std::string getJustTheNumbers(std::string const & line)
@@ -78,6 +79,50 @@ void solvePartOne(std::vector<std::string> const & lines)
     std::cout << "Total score: " << totalScore << std::endl;
 }
 
+void solvePartTwo(std::vector<std::string> const & lines)
+{
+    std::unordered_map<unsigned int, unsigned int> count;
+    std::unordered_map<unsigned int, unsigned int> copies;
+    unsigned int totalCards{0};
+    for (unsigned int i = 0; i < lines.size(); ++i)
+    {
+        std::string numbers{getJustTheNumbers(lines[i])};
+        std::unordered_set<int> winners{getNumbers(numbers, true)};
+        std::unordered_set<int> draw{getNumbers(numbers, false)};
+
+        unsigned int matches{0};
+        for (int n : draw)
+        {
+            if (winners.contains(n))
+                matches++;
+        }
+        // I now copy each scratchcard that I have matches
+        // So if I have 3 matches in the 2nd card I copy the 3rd, 4th and 5th card
+        // Each card that gets copied gets its matches counted
+        // So if I have 2 copies of the 2nd card, its matches get counted twice
+        count[i] = 1;
+        // // Now see if there are any copies
+        count[i] = copies.contains(i)? count[i] + copies[i] : count[i];
+
+        // Now accrue the copies according to the matches
+        if (0 == matches)
+            continue;
+
+        for (unsigned int j = 0; j < matches; ++j)
+        {
+            unsigned int cardNumber = j + i + 1;
+            copies[cardNumber] = copies.contains(cardNumber)? copies[cardNumber] + count[i] : count[i];
+        }
+    }
+
+    for (auto [key, value] : count)
+    {
+        totalCards += value;
+    }
+
+    std::cout << "Total number of cards: " << totalCards << std::endl;
+}
+
 int main(int argc, const char ** argv)
 {
     if (argc < 2)
@@ -88,5 +133,6 @@ int main(int argc, const char ** argv)
 
     auto lines = helpers::getLinesInFile(argv[1]);
 
-    solvePartOne(lines);
+    // solvePartOne(lines);
+    solvePartTwo(lines);
 }
