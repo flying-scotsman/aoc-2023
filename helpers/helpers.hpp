@@ -95,4 +95,9 @@ std::vector<std::string> pivotLines(std::vector<std::string> const & lines)
     return pivotedLines;
 }
 
+std::size_t factorial(std::size_t const n)
+{
+    return n != 0? n * factorial(n - 1) : 1;
+}
+
 }
