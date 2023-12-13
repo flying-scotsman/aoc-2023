@@ -18,46 +18,7 @@ std::vector<std::vector<std::string>> getTextBlocks(std::vector<std::string> con
     return blocks;
 }
 
-std::vector<unsigned int> getColumnsLeftOfMirrorPlanes(std::vector<std::string> const & block)
-{
-    std::vector<unsigned int> mirrorPlanes;
-    std::vector<bool> potentialMirrorPlanes(block[0].size()-1, true);
-
-    for (std::string const & line : block)
-    {
-        for (int i = 0; i < potentialMirrorPlanes.size(); ++i)
-        {
-            int l = i;
-            int r = i + 1;
-
-            while (l >= 0 && r < line.size())
-            {
-                if (line[l] != line[r])
-                {
-                    potentialMirrorPlanes[i] = false;
-                }
-
-                l--;
-                r++;
-            }
-        }
-    }
-
-    // Any surviving candidates are mirror planes
-    // std::cout << "Mirror planes:" << std::endl;
-    for (unsigned int i = 0; i < potentialMirrorPlanes.size(); ++i)
-    {
-        if (potentialMirrorPlanes[i])
-        {
-            // std::cout << i << std::endl;
-            mirrorPlanes.push_back(i + 1); // Since we are counting planes and not
-        }
-    }
-
-    return mirrorPlanes;
-}
-
-std::vector<unsigned int> getColumnsLeftOfMirrorPlanesWithSmudge(std::vector<std::string> const & block)
+std::vector<unsigned int> getColumnsLeftOfMirrorPlanes(std::vector<std::string> const & block, bool smudge = false)
 {
     std::vector<unsigned int> mirrorPlanes;
     std::vector<unsigned int> mirrorPlaneDefects(block[0].size()-1, 0);
@@ -82,13 +43,14 @@ std::vector<unsigned int> getColumnsLeftOfMirrorPlanesWithSmudge(std::vector<std
         }
     }
 
-    // Any planes where there's only one defect are our guys
+    // Any surviving candidates are mirror planes
+    // std::cout << "Mirror planes:" << std::endl;
     for (unsigned int i = 0; i < mirrorPlaneDefects.size(); ++i)
     {
-        if (1 == mirrorPlaneDefects[i])
+        if (smudge == mirrorPlaneDefects[i])
         {
             // std::cout << i << std::endl;
-            mirrorPlanes.push_back(i + 1);
+            mirrorPlanes.push_back(i + 1); // Since we are counting planes and not
         }
     }
 
@@ -127,13 +89,13 @@ void solvePartTwo(std::vector<std::string> const & lines)
     for (auto const & block : blocks)
     {
         // Then for each line in the block we check the symmetry of each plane
-        std::vector<unsigned int> mirrorPlanes{getColumnsLeftOfMirrorPlanesWithSmudge(block)};
+        std::vector<unsigned int> mirrorPlanes{getColumnsLeftOfMirrorPlanes(block, true)};
         for (unsigned int const p : mirrorPlanes)
         {
             summary += p;
         }
         // Then do the same with pivoted rows
-        std::vector<unsigned int> mirrorRows{getColumnsLeftOfMirrorPlanesWithSmudge(helpers::pivotLines(block))};
+        std::vector<unsigned int> mirrorRows{getColumnsLeftOfMirrorPlanes(helpers::pivotLines(block), true)};
         for (unsigned int const p : mirrorRows)
         {
             summary += 100 * p;
