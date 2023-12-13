@@ -26,23 +26,6 @@ void duplicateLines(std::vector<std::string> & lines)
     }
 }
 
-std::vector<std::string> pivotLines(std::vector<std::string> const & lines)
-{
-    std::vector<std::string> columns(lines[0].size());
-
-    // Create columns
-    for (unsigned int i = 0; i < lines[0].size(); ++i)
-    {
-        for (unsigned int j = 0; j < lines.size(); ++j)
-        {
-            // I always want to append the ith element in a line to the ith column
-            columns[i] += lines[j][i];
-        }
-    }
-
-    return columns;
-}
-
 std::unordered_set<unsigned int> getEmptyLines(std::vector<std::string> const & lines)
 {
     std::unordered_set<unsigned int> output;
@@ -64,18 +47,18 @@ std::unordered_set<unsigned int> getEmptyLines(std::vector<std::string> const & 
 
 std::unordered_set<unsigned int> getEmptyColumns(std::vector<std::string> const & lines)
 {
-    std::vector<std::string> columns{pivotLines(lines)};
+    std::vector<std::string> columns{helpers::pivotLines(lines)};
 
     return getEmptyLines(columns);
 }
 
 void duplicateColumns(std::vector<std::string> & lines)
 {
-    std::vector<std::string> columns{pivotLines(lines)};
+    std::vector<std::string> columns{helpers::pivotLines(lines)};
 
     duplicateLines(columns);
 
-    lines = pivotLines(columns);
+    lines = helpers::pivotLines(columns);
 }
 
 std::vector<helpers::Index> getGalaxies(std::vector<std::string> const & lines)

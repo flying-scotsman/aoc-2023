@@ -77,4 +77,21 @@ struct Index
     }
 };
 
+std::vector<std::string> pivotLines(std::vector<std::string> const & lines)
+{
+    std::vector<std::string> pivotedLines(lines[0].size());
+
+    // Create pivotedLines
+    for (unsigned int i = 0; i < lines[0].size(); ++i)
+    {
+        for (unsigned int j = 0; j < lines.size(); ++j)
+        {
+            // I always want to append the ith element in a line to the ith column
+            pivotedLines[i] += lines[j][i];
+        }
+    }
+
+    return pivotedLines;
+}
+
 }
