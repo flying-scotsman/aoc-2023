@@ -100,4 +100,12 @@ std::size_t factorial(std::size_t const n)
     return n != 0? n * factorial(n - 1) : 1;
 }
 
+std::size_t binomialCoefficient(std::size_t const n, std::size_t const k)
+{
+    if (n < k)
+        return 0;
+
+    return factorial(n) / (factorial(n - k) * factorial(k));
+}
+
 }
