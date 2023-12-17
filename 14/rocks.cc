@@ -50,17 +50,6 @@ unsigned int computeLoad(std::vector<std::string> const & lines)
     return totalLoad;
 }
 
-void solvePartOne(std::vector<std::string> const & lines)
-{
-    auto columns{helpers::pivotLines(lines)};
-
-    rollRocks(columns);
-
-    auto rows{helpers::pivotLines(columns)};
-
-    std::cout << "Total load: " << computeLoad(rows) << std::endl;
-}
-
 void tiltNorth(std::vector<std::string> & lines)
 {
     // tilt north - pivot like normal, roll, pivot back
@@ -112,6 +101,13 @@ void performCycle(std::vector<std::string> & lines)
     tiltEast(lines);
 }
 
+void solvePartOne(std::vector<std::string> & lines)
+{
+    tiltNorth(lines);
+
+    std::cout << "Total load part 1: " << computeLoad(lines) << std::endl;
+}
+
 void solvePartTwo(std::vector<std::string> & lines, int numOfCycles)
 {
     std::vector<std::string> newLines = lines;
@@ -153,7 +149,7 @@ void solvePartTwo(std::vector<std::string> & lines, int numOfCycles)
     for (int i = 0; i < numOfCyclesEquiv; ++i)
         performCycle(lines);
 
-    std::cout << "Total load: " << computeLoad(lines) << std::endl;
+    std::cout << "Total load part 2: " << computeLoad(lines) << std::endl;
 }
 
 int main(int argc, const char ** argv)
@@ -166,6 +162,6 @@ int main(int argc, const char ** argv)
 
     auto lines{helpers::getLinesInFile(argv[1])};
 
-    // solvePartOne(lines);
+    solvePartOne(lines);
     solvePartTwo(lines, std::stol(argv[2]));
 }
