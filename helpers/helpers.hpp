@@ -78,6 +78,21 @@ struct Index
     }
 };
 
+// Position
+//  0
+// 1 2
+//  3
+struct IndexIncrement
+{
+    Index index{};
+    int direction = -1;  // this refers to the position of this index relative to the previous one
+
+    bool operator==(IndexIncrement const & other) const
+    {
+        return index.r == other.index.r && index.c == other.index.c && direction == other.direction;
+    }
+};
+
 std::vector<std::string> pivotLines(std::vector<std::string> const & lines)
 {
     std::vector<std::string> pivotedLines(lines[0].size());
@@ -109,3 +124,21 @@ std::size_t binomialCoefficient(std::size_t const n, std::size_t const k)
 }
 
 }
+
+template <>
+struct std::hash<helpers::Index>
+{
+  std::size_t operator()(const helpers::Index& i) const
+  {
+    return std::hash<int>()(i.r) ^ std::hash<int>()(i.c);
+  }
+};
+
+template <>
+struct std::hash<helpers::IndexIncrement>
+{
+  std::size_t operator()(const helpers::IndexIncrement& i) const
+  {
+    return std::hash<helpers::Index>()(i.index) ^ std::hash<int>()(i.direction);
+  }
+};

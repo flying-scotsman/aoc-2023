@@ -5,16 +5,6 @@
 
 using namespace helpers;
 
-// Position
-//  0
-// 1 2
-//  3
-struct IndexIncrement
-{
-    Index index{};
-    int direction = -1;  // this refers to the position of this index relative to the previous one
-};
-
 Index getIndexOfS(std::vector<std::string> const & lines)
 {
     for (int r = 0; r < lines.size(); ++r)
